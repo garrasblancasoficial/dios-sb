@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Particle Engine - Sandbox</title>
+    <style>
+        body { 
+            background: #111; 
+            color: #eee; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-family: sans-serif;
+        }
+        canvas { 
+            border: 2px solid #333; 
+            background: #000; 
+            image-rendering: pixelated; /* Mantiene los píxeles nítidos */
+            cursor: crosshair;
+            margin-top: 20px;
+        }
+        .controls {
+            padding: 10px;
+            background: #222;
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover { background: #666; }
+    </style>
+</head>
+<body>
+
+<div class="controls" id="toolbar">
+    <button onclick="currentElement = 1">Sand</button>
+    <button onclick="currentElement = 10">Water</button>
+    <button onclick="currentElement = 52">Fire</button>
+    <button onclick="currentElement = 0">Eraser</button>
+</div>
+
+<canvas id="worldCanvas"></canvas>
+
+<script src="script.js"></script> 
+
+<script>
+    // Configuración inicial del Canvas
+    const canvas = document.getElementById('worldCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // El tamaño interno del motor (200x200 píxeles por ejemplo)
+    const worldWidth = 200;
+    const worldHeight = 200;
+    
+    canvas.width = 600;  // Tamaño visual en pantalla
+    canvas.height = 600;
+
+    let currentElement = 1;
+
+    // Lógica para pintar con el mouse
+    let painting = false;
+    canvas.onmousedown = () => painting = true;
+    window.onmouseup = () => painting = false;
+
+    canvas.onmousemove = (e) => {
+        if (!painting) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / (rect.width / worldWidth));
+        const y = Math.floor((e.clientY - rect.top) / (rect.height / worldHeight));
+        
+        // Aquí llamas a la función de tu motor para añadir partículas
+        if (typeof engine !== 'undefined') {
+            engine.setPixel(x, y, currentElement);
+        }
+    };
+</script>
+
+</body>
+</html>
